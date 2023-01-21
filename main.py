@@ -1,14 +1,22 @@
+from bs4 import BeautifulSoup as bs
 import requests as req
-import re
 
-url = 'https://finance.naver.com/marketindex/'
-res = req.get(url)
-cost = res.text
+url = 'https://finance.naver.com/marketindex/exchangeList.naver'
+a = req.get(url)
+soup = bs(a.text, "html.parser")
+tds = soup.find_all('td')
+name = []
+price = []
 
-r = re.compile(r'h_lst.*?blind">(.*?)</span>.*?value">(.*?)</', re.DOTALL)
-cost = r.findall(cost)
-print('-------환율 계산기-------\n')
+for td in tds:
+    if len(td.find_all('a')) == 0:
+        continue
+    name.append(td.get_text(strip=True))
 
-for i in cost:
-    print(i[0], ":", i[1] + '원')
-print()
+for td in tds:
+    if "class"in td.attrs:
+        if "sale" in td.attrs["class"]:
+            price.append(td.get_text(strip=True))
+
+print(name)
+print(price)
