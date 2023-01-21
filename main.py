@@ -5,6 +5,8 @@ url = 'https://finance.naver.com/marketindex/exchangeList.naver'
 a = req.get(url)
 soup = bs(a.text, "html.parser")
 tds = soup.find_all('td')
+
+'''
 name = []
 price = []
 
@@ -18,5 +20,15 @@ for td in tds:
         if "sale" in td.attrs["class"]:
             price.append(td.get_text(strip=True))
 
+print(name)
+print(price)
+'''
+
+name = []
+price = []
+for td in soup.select('td.tit'):
+    name.append(td.get_text(strip=True))
+for td in soup.select('td.sale'):
+    price.append(td.get_text(strip=True))
 print(name)
 print(price)
